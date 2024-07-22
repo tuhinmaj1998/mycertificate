@@ -16,10 +16,10 @@ from dotenv import load_dotenv, dotenv_values
 load_dotenv()
 
 
-extractGsheet_url = os.getenv('extractGsheet_url') # 'https://script.google.com/macros/s/AKfycby3X7uvFqiU3NN2FnjhtxryNGFPU__wqXxBTGOtr-cQwk-z3y8ZLSkJ5Abku8-A6Ycg/exec'
-get_gsheetslist_url = os.getenv('get_gsheetslist_url') # 'https://script.google.com/macros/s/AKfycbzOwM4ugHnmdG01V7zEWzene8ON4QVUZ9SPASTAHFxxoEDgoHiEF4_V17ksrm-NUHsL_g/exec'
-registered_template_url = os.getenv('registered_template_url') # 'https://script.google.com/macros/s/AKfycbz2jE3eg4mdxe4cTArHWLf9ylGSgc_CyDtou7kHJ-tzvMjiNuciOSUP9H1KjXkmuK8z/exec'
-generateSampleCertGdrive_url = os.getenv('generateSampleCertGdrive_url') # 'https://script.google.com/macros/s/AKfycbw0csSAN8OoZnkB-J1KUFY_50t4oXwh9df0B1o2JLsBWpH40mN1ytzuXCh9ijGXQ27-SQ/exec'
+extractGsheet_url = os.getenv('extractGsheet_url')
+get_gsheetslist_url = os.getenv('get_gsheetslist_url')
+registered_template_url = os.getenv('registered_template_url')
+generateSampleCertGdrive_url = os.getenv('generateSampleCertGdrive_url')
 appscript_key = os.getenv('appscript_key') # '123'
 
 print(os.environ.get('ExtractGsheet_url'))

@@ -1,0 +1,8 @@
+# created by virtualenv automatically
+runConfigurations
+.env
+*.env
+Documentation.pages
+lib
+bin
+data

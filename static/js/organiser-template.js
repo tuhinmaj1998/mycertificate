@@ -551,10 +551,10 @@ function generateCertGdrive(is_sample){
                 document.getElementById('embedded-sample-cert').style.display = 'block';
                 document.getElementById('embedded-sample-cert').src = final_response.pdf_urls[0];
             }
-            else{
-                openModal();
-                document.getElementById('embedded-sample-cert').style.display = 'none';
-            }
+//            else{
+//                openModal();
+//                document.getElementById('embedded-sample-cert').style.display = 'none';
+//            }
 
             if (is_sample == 0){
                 openModal();

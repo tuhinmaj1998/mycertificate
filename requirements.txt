@@ -1,7 +1,6 @@
 alabaster==0.7.16
 annotated-types==0.7.0
 anyio==4.2.0
-appscript==1.2.5
 Babel==2.15.0
 beautifulsoup4==4.12.3
 bs4==0.0.2

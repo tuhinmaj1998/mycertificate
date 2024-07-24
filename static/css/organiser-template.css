@@ -118,3 +118,11 @@ table.table { width:auto;}
     pointer-events: none;
     opacity: 0.5; /* Adjust opacity as needed */
 }
+
+#sampleInputTable input, #mappingTable input {
+    padding: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /*font-style: italic;*/
+}
+

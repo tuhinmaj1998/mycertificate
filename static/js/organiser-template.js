@@ -14,7 +14,7 @@ var ColumnMappingJson = [];
 var sampleDataJson = [];
 var gsheet_columnwise_data = []
 
-var final_response = [];
+var final_response = []; //PDFfolder_url, pdf_urls
 
 function showTab(n) {
     let x = document.getElementsByClassName("step");
@@ -33,13 +33,19 @@ function showTab(n) {
 
 function nextPrev(n) {
     let x = document.getElementsByClassName("step");
+    console.log('x.length: ', x.length);
+    console.log('currentTab: ', currentTab);
 //    if (n == 1 && !validateForm()) return false;
-    x[currentTab].style.display = "none";
+    if (currentTab < x.length-1) {
+        x[currentTab].style.display = "none";
+    }
     currentTab += n;
+
     if (currentTab >= x.length) {
         generateCertGdrive(0);
+//        document.getElementById('final-step').style.display = 'block';
 //        resetForm();
-//        return false;
+        return false;
     }
     showTab(currentTab);
 }
@@ -147,19 +153,32 @@ function populateTable(data) {
         headerRow.appendChild(th);
     }
 
-    // Create data rows
-    data.forEach(function (rowData, index) {
-        var row = table.insertRow(index + 1);
+
+    var rowCount = Math.min(2, data.length); // Limit to first 5 entries or data length if less than 5
+    for (var i = 0; i < rowCount; i++) {
+        var rowData = data[i];
+        var row = table.insertRow(i + 1);
         for (var key in rowData) {
             var cell = row.insertCell();
             cell.textContent = rowData[key];
         }
-    });
+    }
+
+
+    // Create data rows
+//    data.forEach(function (rowData, index) {
+//        var row = table.insertRow(index + 1);
+//        for (var key in rowData) {
+//            var cell = row.insertCell();
+//            cell.textContent = rowData[key];
+//        }
+//    });
+
     document.getElementById("loader1").style.display = 'none';
 //    document.getElementById("myProgress").style.display = 'none';
 
     var table = document.getElementById("verifyGsheetTable");
-    jsonGsheetData = tableToJson(table);
+    jsonGsheetData = data;//tableToJson(table);
     console.log(jsonGsheetData);
     gsheetColumns = Object.keys(jsonGsheetData[0]);
     addRowsBasedOnTemplateColumns();
@@ -241,6 +260,11 @@ function getTemplateColumns(columns){
         span.style = 'margin-right:5px';
         span.innerHTML = template;
         colElement.appendChild(span);
+
+        document.getElementById('embedded-template-cert-dev').style.display = 'block';
+        document.getElementById('embedded-template-cert').style.display = 'block';
+        document.getElementById("embedded-template-cert").src = 'https://drive.google.com/file/d/'+document.getElementById("Template-List").value+'/preview';
+//        embeddedTemplate();
     })
 }
 
@@ -333,6 +357,7 @@ function addRowsBasedOnTemplateColumns() {
         // Cells for gsheetColumns dropdown
         var cellGsheet = row.insertCell();
         var selectGsheet = document.createElement("select");
+        selectGsheet.classList.add("form-select");
         selectGsheet.classList.add("gsheet-column");
         gsheetColumns.forEach(column => {
             var option = document.createElement("option");
@@ -528,8 +553,12 @@ function generateCertGdrive(is_sample){
             }
             else{
                 document.getElementById('embedded-sample-cert').style.display = 'none';
+
             }
+            openModal();
             document.getElementById("loader1").style.display = 'none';
+
+            return data['PDFfolder_url'];
          })
 }
 
@@ -708,3 +737,55 @@ function verifyGsheet_automatic() {
              console.error('Error submitting data:', error);
              })
 }
+
+function embeddedTemplate(){
+    document.getElementById("loader1").style.display = 'block';
+    fetch("/embeddedTemplate", {
+        method:"POST",
+        body: JSON.stringify({
+                  template_id: document.getElementById("Template-List").value
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        document.getElementById('embedded-template-cert').style.display = 'block';
+        document.getElementById('embedded-template-cert').src = data;
+        document.getElementById("loader1").style.display = 'none';
+    })
+}
+
+
+// Function to open the modal
+ function openModal() {
+    document.getElementById("loader1").style.display = 'block';
+    var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'), {
+      backdrop: 'static', // Optional: 'static' for a modal that doesn't close when clicking outside
+      keyboard: false     // Optional: false to disable closing the modal with the Escape key
+    });
+
+    console.log("final_response['PDFfolder_url']: ", final_response['PDFfolder_url']);
+
+    fetch("/downloadPdfZip", {
+        method:"POST",
+        body:JSON.stringify({
+            folder_url: final_response['PDFfolder_url'],
+        })
+
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('downloadPdfZip: ', data);
+        document.getElementById('download_zip_a').href = data['url'];
+        document.getElementById("loader1").style.display = 'none';
+        myModal.show();
+    })
+
+ }
+
+ // Function to close the modal
+ function closeModal() {
+    var modalElement = document.getElementById('staticBackdrop');
+    var modal = bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
+ }

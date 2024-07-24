@@ -1,6 +1,8 @@
 import os
+
 import pandas as pd
 import requests
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Query
 # from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
@@ -11,23 +13,21 @@ from downloadDocx import registeredTemplateList, download_file_from_google_drive
     delete_files_in_folder
 from extractGsheet import fetch_post_data
 
-import os
-from dotenv import load_dotenv, dotenv_values
 load_dotenv()
-
 
 extractGsheet_url = os.getenv('extractGsheet_url')
 get_gsheetslist_url = os.getenv('get_gsheetslist_url')
 registered_template_url = os.getenv('registered_template_url')
 generateSampleCertGdrive_url = os.getenv('generateSampleCertGdrive_url')
-appscript_key = os.getenv('appscript_key') # '123'
+appscript_key = os.getenv('appscript_key')  # '123'
+embedded_template_url = os.getenv('embedded_template_url')  # '123'
+zip_download_url = os.getenv('zip_download_url')  # '123'
 
 print(os.environ.get('ExtractGsheet_url'))
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory='templates')
-
 
 @app.get("/")
 async def home(request: Request):
@@ -73,6 +73,7 @@ async def Get_gsheetslist_url():
     response = requests.get(get_gsheetslist_url)
     get_gsheetslists_data = response.json()
     return get_gsheetslists_data['sheetData']
+
 
 @app.post("/fetchgsheet")
 async def fetchgsheet(request: Request):
@@ -125,13 +126,12 @@ async def generateCertGdrive(request: Request):
     gsheet_columnwise_data = form_data.get("gsheet_columnwise_data")
     column_mapping = form_data.get("column_mapping")
 
-    print('is_sample: ', is_sample)
-    print('template_file_id: ', template_file_id)
-    print('spreadsheet_url: ', spreadsheet_url)
-    print('sheetname: ', sheetname)
-    print('gsheet_columnwise_data: ', gsheet_columnwise_data)
-    print('column_mapping: ', column_mapping)
-
+    # print('is_sample: ', is_sample)
+    # print('template_file_id: ', template_file_id)
+    # print('spreadsheet_url: ', spreadsheet_url)
+    # print('sheetname: ', sheetname)
+    # print('gsheet_columnwise_data: ', gsheet_columnwise_data)
+    # print('column_mapping: ', column_mapping)
 
     pdf_files = CreatePDFsInGdrive(generateSampleCertGdrive_url, is_sample, template_file_id, spreadsheet_url,
                                    sheetname, gsheet_columnwise_data, column_mapping)
@@ -144,3 +144,24 @@ async def submitData(request: Request):
     submitted_data = await request.json()
     print(submitted_data)
     return submitted_data
+
+@app.post("/embeddedTemplate")
+async def embeddedTemplate(request: Request):
+    submitted_data = await request.json()
+    template_id = submitted_data['template_id']
+    embedded_template_full_url = f'{embedded_template_url}?template_file_id={template_id}'
+    embedded_template_preview = requests.get(embedded_template_full_url).json()
+    print(embedded_template_preview['pdf_url'])
+    return embedded_template_preview['pdf_url']
+
+
+@app.post("/downloadPdfZip")
+async def downloadPdfZip(request:Request):
+    folder_data = await request.json()
+    print(folder_data)
+    folder_url = folder_data
+    print('folder_url', folder_url)
+    zip_url = f'{zip_download_url}?folder_url={folder_url}'
+    response = requests.get(zip_url).json()
+    print(response)
+    return response

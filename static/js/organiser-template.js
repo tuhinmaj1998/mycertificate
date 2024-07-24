@@ -552,10 +552,10 @@ function generateCertGdrive(is_sample){
                 document.getElementById('embedded-sample-cert').src = final_response.pdf_urls[0];
             }
             else{
+                openModal();
                 document.getElementById('embedded-sample-cert').style.display = 'none';
-
             }
-            openModal();
+
             document.getElementById("loader1").style.display = 'none';
 
             return data['PDFfolder_url'];

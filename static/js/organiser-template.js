@@ -550,6 +550,7 @@ function generateCertGdrive(is_sample){
             if (final_response.pdf_urls && is_sample == 1){
                 document.getElementById('embedded-sample-cert').style.display = 'block';
                 document.getElementById('embedded-sample-cert').src = final_response.pdf_urls[0];
+                document.getElementById("loader1").style.display = 'none';
             }
 //            else{
 //                openModal();
@@ -560,7 +561,7 @@ function generateCertGdrive(is_sample){
                 openModal();
             }
 
-            document.getElementById("loader1").style.display = 'none';
+
 
             return data['PDFfolder_url'];
          })

@@ -2,10 +2,10 @@ import json
 import subprocess
 import time
 from datetime import datetime as dt
+
 import pandas as pd
 import requests
 from docxtpl import DocxTemplate
-from pprint import pprint
 
 root = '/Users/tuhinmajumder/pythonProject/mycertificate'
 static_dir = f'{root}/static'
@@ -89,7 +89,6 @@ def templateDataFit(jsonData, is_sample):
         return pdf_file
 
 
-
 def get_templated_data(gsheet_columnwise_data, column_mapping):
     # template_id = response_json['template_id']
     # gsheet_columnwise_data = response_json['gsheet_columnwise_data']
@@ -103,6 +102,11 @@ def get_templated_data(gsheet_columnwise_data, column_mapping):
 
         template_row = {}
         for mapping in column_mapping:
+            mapping_df = pd.DataFrame([mapping])
+            # print(mapping_df[mapping_df['gsheetColumns']=='Preferred Salutation']['templateColumns'].to_string(index=False))
+
+            # print("mapping['templateColumns']", mapping['templateColumns'])
+            # print("mapping['gsheetColumns']", mapping['gsheetColumns'])
             template_column = mapping['templateColumns']
             gsheet_column = mapping['gsheetColumns']
             hardcode_value = mapping['hardcode_value_ifapplicable']
@@ -110,7 +114,9 @@ def get_templated_data(gsheet_columnwise_data, column_mapping):
             if gsheet_column == 'others':
                 template_row[template_column] = hardcode_value
             else:
-                template_row[template_column] = row[gsheet_column]
+
+                # print('templateCol:', template_column, '\ngsheet_col:', gsheet_column)
+                template_row[mapping_df[mapping_df['gsheetColumns']==gsheet_column]['templateColumns'].to_string(index=False)] = row[template_column]
 
         template_row['RNUM'] = rnum
         template_data.append(template_row)
@@ -118,7 +124,8 @@ def get_templated_data(gsheet_columnwise_data, column_mapping):
     return template_data
 
 
-def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetname, gsheet_columnwise_data, column_mapping):
+def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetname, gsheet_columnwise_data,
+                       column_mapping):
     ''' example:
     var jData = [
       {
@@ -182,3 +189,38 @@ def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetn
 #                                   {'templateColumns': 'COURSENAME', 'sampleValue': 'Coursera'},
 #                                   {'templateColumns': 'DATE', 'sampleValue': '22-27th July, 2024'},
 #                                   {'templateColumns': 'NAME', 'sampleValue': 'Tuhin Majumder'}]}, 1))
+
+
+# def CreatePDFsInGdrive_1(url, is_sample, template_file_id, spreadsheet_url, sheetname, gsheet_columnwise_data,
+#                        column_mapping):
+#     gsheet_columnwise_data_corrected = pd.DataFrame()
+#     df = pd.DataFrame(gsheet_columnwise_data)
+#     column_mapping_df = pd.DataFrame(column_mapping)
+#
+#     # for index, row in df.iterrows():
+#     #     print(row)
+#         # gsheet_columnwise_data_corrected[str(column_mapping_df[index])] = row
+#
+#
+#
+#     return df.to_string(index=False)
+
+
+
+#
+# print(CreatePDFsInGdrive(
+#     url='https://script.google.com/macros/s/AKfycbw0csSAN8OoZnkB-J1KUFY_50t4oXwh9df0B1o2JLsBWpH40mN1ytzuXCh9ijGXQ27-SQ/exec',
+#     is_sample=1,
+#     template_file_id='1NLcYVsC6JQP6uG4f-MrpzVPdnKNwpPaCq_C5WqruC78',
+#     spreadsheet_url='https://docs.google.com/spreadsheets/d/1xIw-odZu7wUKK6bEtWiCGXGO7MrPSYHQE-udnbJIgs4/edit',
+#     sheetname='nw_fq',
+#     gsheet_columnwise_data=[
+#         {"COURSENAME": "Certificate Generation 101", "SALUTE": "Mr", "NAME": "T Majumder", "DATE": "3@gmail.com"}],
+#     column_mapping=[{"templateColumns": "COURSENAME", "gsheetColumns": "others",
+#                      "hardcode_value_ifapplicable": "Certificate Generation 101"},
+#                     {"templateColumns": "SALUTE", "gsheetColumns": "Preferred Salutation",
+#                      "hardcode_value_ifapplicable": ""},
+#                     {"templateColumns": "NAME", "gsheetColumns": "NAME", "hardcode_value_ifapplicable": ""},
+#                     {"templateColumns": "DATE", "gsheetColumns": "Email Address", "hardcode_value_ifapplicable": ""}])
+# )
+

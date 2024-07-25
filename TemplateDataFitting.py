@@ -89,7 +89,7 @@ def templateDataFit(jsonData, is_sample):
         return pdf_file
 
 
-def get_templated_data(gsheet_columnwise_data, column_mapping):
+def get_templated_data(gsheet_columnwise_data, column_mapping, is_sample):
     # template_id = response_json['template_id']
     # gsheet_columnwise_data = response_json['gsheet_columnwise_data']
     # column_mapping = response_json['column_mapping']
@@ -116,7 +116,11 @@ def get_templated_data(gsheet_columnwise_data, column_mapping):
             else:
 
                 # print('templateCol:', template_column, '\ngsheet_col:', gsheet_column)
-                template_row[mapping_df[mapping_df['gsheetColumns']==gsheet_column]['templateColumns'].to_string(index=False)] = row[template_column]
+                if is_sample == 1:
+                    template_row[mapping_df[mapping_df['gsheetColumns'] == gsheet_column]['templateColumns'].to_string(
+                        index=False)] = row[template_column]
+                else:
+                    template_row[template_column] = row[gsheet_column]
 
         template_row['RNUM'] = rnum
         template_data.append(template_row)
@@ -150,7 +154,7 @@ def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetn
     submit_response['spreadsheet_url'] = spreadsheet_url
     submit_response['sheetname'] = sheetname
 
-    data = get_templated_data(gsheet_columnwise_data, column_mapping)
+    data = get_templated_data(gsheet_columnwise_data, column_mapping, is_sample)
     submit_response['data'] = data
 
     submit_response = json.dumps(submit_response)
@@ -206,8 +210,7 @@ def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetn
 #     return df.to_string(index=False)
 
 
-
-#
+# #
 # print(CreatePDFsInGdrive(
 #     url='https://script.google.com/macros/s/AKfycbw0csSAN8OoZnkB-J1KUFY_50t4oXwh9df0B1o2JLsBWpH40mN1ytzuXCh9ijGXQ27-SQ/exec',
 #     is_sample=1,
@@ -223,4 +226,3 @@ def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetn
 #                     {"templateColumns": "NAME", "gsheetColumns": "NAME", "hardcode_value_ifapplicable": ""},
 #                     {"templateColumns": "DATE", "gsheetColumns": "Email Address", "hardcode_value_ifapplicable": ""}])
 # )
-

@@ -420,3 +420,9 @@ def error(request: Request, error_text: str = Query(...), status_code: int = Que
 # @app.get('/e')
 # def e(request:Request):
 #     return RedirectResponse(url=f'/error?error_text=rTemplates_response&status_code=201')
+
+@app.get('/privacy')
+async def privacy(request: Request):
+    user_info = request.session.get('user_info', None)
+    # template = templates.get_template('privacy_policy.html')
+    return templates.TemplateResponse('privacy_policy.html', {"request": request, "user_info": user_info, "nav":"Privacy"})

@@ -7,3 +7,6 @@ Documentation.pages
 lib
 bin
 data
+client_secret.json
+credentials.json
+certiphicate.json

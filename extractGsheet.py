@@ -2,17 +2,17 @@
 import requests
 
 
-def fetch_post_data(url, submit_response):
+def fetch_post_data(url, submit_response, headers):
     # url = 'https://script.google.com/macros/s/your-script-id/exec'  # Replace with your published script URL
     try:
         print(submit_response)
-        response = requests.post(url, data=submit_response)  # {"key":"123", 'password':'123'})
+        response = requests.post(url, data=submit_response, headers=headers)  # {"key":"123", 'password':'123'})
         data = response.json()
         return {'code': response.status_code, 'msg': data}
 
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
-        return {'code': response.status_code, 'data': []}
+        return {'code': response.status_code, 'msg': response.text}
 #
 # def identify_columns(post_response_data):
 #     import pandas as pd

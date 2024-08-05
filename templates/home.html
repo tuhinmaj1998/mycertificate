@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Google Font -->
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="/static/css/organiser-template.css">
-<!--        <script src="/static/js/organiser-template.js"></script>-->
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/organiser-template.css">
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="/static/css/organiser-template.css">
 
-    </head>
-
+</head>
+{% include 'nav.html' %}
 <body>
 <div class="container">
     <div class="row text-center">
-        <h2>Welcome to Certiphied</h2>
+        <h2>Welcome to Certiphicate</h2>
     </div>
 </div>
-<div>
-    <div class="container">
-        <div class="row text-center">
-            <div>
-                <a class="btn btn-warning" style="float: center;" onclick="window.location = '/organiser'">Organiser Access</a>
-            </div>
+<div class="container">
+    <div class="row text-center">
+        <div>
+            <a class="btn btn-warning" style="float: center;" onclick="window.location = '/organiser'">Organiser
+                Access</a>
         </div>
     </div>
 </div>
+<!--<div class="container">-->
+
+<!--</div>-->
 
 
 </body>

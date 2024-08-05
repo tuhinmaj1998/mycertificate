@@ -552,19 +552,32 @@ function generateCertGdrive(is_sample){
                 document.getElementById('embedded-sample-cert').src = final_response.pdf_urls[0];
                 document.getElementById("loader1").style.display = 'none';
             }
+            else if (is_sample == 0){
+                openModal();
+            }
+
+            else{
+                console.log("final_response: ", JSON.stringify(final_response));
+                document.getElementById("loader1").style.display = 'none';
+                window.location.href = "/error?error_text="+JSON.stringify(final_response)+"&status_code="+401;
+            }
 //            else{
 //                openModal();
 //                document.getElementById('embedded-sample-cert').style.display = 'none';
 //            }
 
-            if (is_sample == 0){
-                openModal();
-            }
+
 
 
 
             return data['PDFfolder_url'];
          })
+         .catch(error => {
+                // Handle any error that occurred in any of the previous .then() handlers
+                console.error('Error:', error);
+                document.getElementById("loader1").style.display = 'none';
+                window.location.href = "/error?error_text="+error.toString()+"&status_code="+401;
+          });
 }
 
 
@@ -739,7 +752,7 @@ function verifyGsheet_automatic() {
                     })
              .catch(error => {
              document.getElementById('sample-gsheet-result').style.display = 'none';
-             console.error('Error submitting data:', error);
+//             console.error('Error submitting data:', error);
              })
 }
 

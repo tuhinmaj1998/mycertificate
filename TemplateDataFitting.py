@@ -129,7 +129,7 @@ def get_templated_data(gsheet_columnwise_data, column_mapping, is_sample):
 
 
 def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetname, gsheet_columnwise_data,
-                       column_mapping):
+                       column_mapping, headers):
     ''' example:
     var jData = [
       {
@@ -159,10 +159,12 @@ def CreatePDFsInGdrive(url, is_sample, template_file_id, spreadsheet_url, sheetn
 
     submit_response = json.dumps(submit_response)
     print(submit_response)
-    response = requests.post(url, data=submit_response)  # {"key":"123", 'password':'123'})
-    # pprint(response.text)
+    response = requests.post(url, data=submit_response, headers=headers)  # {"key":"123", 'password':'123'})
+
+    if response.status_code != 200:
+        return {"code": response.status_code, "data":response.text}
     response_pdfs = response.json()
-    return response_pdfs
+    return {"code": response.status_code, "data":response_pdfs}
 
 
 # print(CreatePDFsInGdrive(
